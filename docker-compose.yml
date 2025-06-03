@@ -1,9 +1,9 @@
 services:
   nifi:
     image: apache/nifi:2.4.0
-    container_name: nifi
+    container_name: nifi-${KEY}
     ports:
-      - "8443:8443" # HTTPS port
+      - "8443:8443" # HTTPS port (Nifi works only with this port.)
     environment:
       - SINGLE_USER_CREDENTIALS_USERNAME=${NIFI_USERNAME}
       - SINGLE_USER_CREDENTIALS_PASSWORD=${NIFI_PASSWORD}
@@ -14,7 +14,7 @@ services:
 
   mysql:
     image: mysql:8.0
-    container_name: mysql
+    container_name: mysql-${KEY}
     restart: unless-stopped
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
@@ -30,10 +30,10 @@ services:
 
   phpmyadmin:
     image: phpmyadmin/phpmyadmin
-    container_name: phpmyadmin
+    container_name: phpmyadmin-${KEY}
     restart: unless-stopped
     environment:
-      PMA_HOST: mysql
+      PMA_HOST: mysql-${KEY}
       PMA_USER: ${MYSQL_ROOT_USER}
       PMA_PASSWORD: ${MYSQL_ROOT_PASSWORD}
       PHP_UPLOAD_MAX_FILESIZE: 1G
