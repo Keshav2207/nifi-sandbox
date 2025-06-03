@@ -30,6 +30,3 @@ wget https://dev.mysql.com/get/Downloads/Connector-J/mysql-connector-j-9.3.0.tar
 
 # Extract it
 tar -xvzf mysql-connector-j-9.3.0.tar.gz
-
-# Copy the JAR file to current directory for easier mounting
-cp mysql-connector-j-9.3.0/mysql-connector-j-9.3.0.jar .
