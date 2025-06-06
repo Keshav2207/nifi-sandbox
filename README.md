@@ -1,10 +1,21 @@
-# Configuring Apache NiFi JDBC Connection Pool for MySQL
+# Setup Apache Nifi
+
+## Steps
+
+1.  [To use MySQL on Nifi: Configuring Apache NiFi JDBC Connection Pool for MySQL](#configuring-apache-nifi-jdbc-connection-pool-for-mysql)
+
+2. Update .env file in the root directory (update values as needed).
+
+3. Start the containers: `docker compose up -d --build`
+
+
+## Configuring Apache NiFi JDBC Connection Pool for MySQL
 
 This guide explains how to configure a **DBCPConnectionPool** controller service in Apache NiFi to connect to a MySQL database running in a Docker container.
 
 ---
 
-## 🔧 Configuration
+### 🔧 Configuration
 
 Below is the configuration table for setting up the JDBC connection pool in NiFi:
 
