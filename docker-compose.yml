@@ -3,10 +3,12 @@ services:
     image: apache/nifi:2.4.0
     container_name: nifi-${KEY}
     ports:
-      - "8443:8443" # HTTPS port (Nifi works only with this port.)
+      - "${NIFI_WEB_HTTPS_PORT}:${NIFI_WEB_HTTPS_PORT}" # Host HTTPS port -> container's port
     environment:
       - SINGLE_USER_CREDENTIALS_USERNAME=${NIFI_USERNAME}
       - SINGLE_USER_CREDENTIALS_PASSWORD=${NIFI_PASSWORD}
+      - NIFI_WEB_HTTPS_PORT=${NIFI_WEB_HTTPS_PORT}
+      - NIFI_WEB_HTTPS_HOST=0.0.0.0
     volumes:
       - nifi_data:/opt/nifi/nifi-current
       - ${MYSQL_CONNECTOR_PATH}:/opt/nifi/drivers/mysql-connector-j-9.3.0/mysql-connector-j-9.3.0.jar:ro
