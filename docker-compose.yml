@@ -10,7 +10,10 @@ services:
       - NIFI_WEB_HTTPS_PORT=${NIFI_WEB_HTTPS_PORT}
       - NIFI_WEB_HTTPS_HOST=0.0.0.0
     volumes:
-      - nifi_data:/opt/nifi/nifi-current
+      - nifi_content:/opt/nifi/nifi-current/content_repository
+      - nifi_flowfile:/opt/nifi/nifi-current/flowfile_repository
+      - nifi_provenance:/opt/nifi/nifi-current/provenance_repository
+      - nifi_conf:/opt/nifi/nifi-current/conf
       - ${MYSQL_CONNECTOR_PATH}:/opt/nifi/drivers/mysql-connector-j-9.3.0/mysql-connector-j-9.3.0.jar:ro
     restart: unless-stopped
 
@@ -43,6 +46,34 @@ services:
     ports:
       - "${PHPMYADMIN_PORT}:80"
 
+  nifi-backup:
+    image: alpine
+    container_name: nifi-backup-${KEY}
+    depends_on:
+      - nifi
+    volumes:
+      - nifi_content:/data/content_repository:ro
+      - nifi_flowfile:/data/flowfile_repository:ro
+      - nifi_provenance:/data/provenance_repository:ro
+      - nifi_conf:/data/conf:ro
+      - ./nifi_backup:/backup
+    command: >
+      sh -c "
+        apk add --no-cache rsync &&
+        while true; do
+          echo '[nifi-backup] Running rsync backup at $(date)' &&
+          rsync -av --delete /data/content_repository/ /backup/content_repository/ &&
+          rsync -av --delete /data/flowfile_repository/ /backup/flowfile_repository/ &&
+          rsync -av --delete /data/provenance_repository/ /backup/provenance_repository/ &&
+          rsync -av --delete /data/conf/ /backup/conf/ &&
+          echo '[nifi-backup] Backup completed at $(date)' &&
+          sleep 86400;
+        done
+      "
+
 volumes:
-  nifi_data:
+  nifi_content:
+  nifi_flowfile:
+  nifi_provenance:
+  nifi_conf:
   mysql_data:
